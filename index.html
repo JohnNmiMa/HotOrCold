@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<link type="text/css" rel="stylesheet" href="main.css">
+		<title>John's Hot-or-Cold Game</title>
+		<script type="text/javascript" src="jquery-2.0.3.js"></script>
+		<script type="text/javascript" src="application.js"></script>
+	</head>
+	<body>
+		<center>
+			<h1 id="game_title">Play <span class="hot">Hot</span>-<span class="guessedIt">or</span>-<span class="cold">Cold!</span></h1>
+			<h3 id="instructions">(Enter a number between 1 and 100)</h3>
+			<form>
+				<input id="guess" type="text" name="guess" maxlength="4" autocomplete="off" spellcheck="false">
+			</form>
+			<div id="guesses">
+				<ul>
+					<li class="num_guesses"></li>
+					<li class="ans_number"></li>
+				</ul>
+			</div>
+			<p id="answer"></p>
+		</center>
+	</body>
+</html>
