@@ -6,7 +6,6 @@ function Game(lb, ub) {
 	var hiddenNumber = 0;
 	var guess = 0;
 	var previousGuess = 0;
-	//var answer = ""; // "VERY COLD", "COLD", "WARM", "VERY WARM", "HOT", "VERY HOT"
 	var numGuesses = 0;
 	var guessesStr = "";
 	var catagories = {};
@@ -97,7 +96,7 @@ function Game(lb, ub) {
 					return 'same';
 			}
 		}
-		return "-";
+		return '';
 	}
 
 	// Returns an answer string depending upon the distance
@@ -161,6 +160,15 @@ $(document).ready(function() {
 			event.stopPropagation();
 			$(this).val(""); // Clear the input form
 		}
+	});
+
+	$('center div#feedback img').click(function() {
+		$('center ul li.num_guesses').html("");
+		$('center ul li.ans_number').html("");
+		$('center p#answer').html("");
+		$('center p#warmer').html("");
+		delete(game);
+		game = new Game(1,100);
 	});
 });
 

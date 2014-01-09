@@ -102,7 +102,6 @@ input {
 }
 
 #guesses {
-	/*width:80%;*/
 	margin-bottom: 30px;
 	font-size: 14px;
 	color:#666666;
@@ -120,14 +119,29 @@ input {
 	margin-right: 10px;
 }
 
-#answer {
+center div#feedback {
+	position: relative;
+	min-height: 75px;
+}
+
+ center div#feedback #answer {
 	font-family: "Crimson-Semibold", "Times New Roman", Georgia, serif;
 	font-size: 48px;
 	min-height: 40px;
 	margin-bottom: 5px
 }
 
-#warmer {
+center div#feedback #warmer {
 	font-size:14px;
-	margin-bottom: 20px
+	/*margin-bottom: 20px;*/
+	min-height: 20px;
+}
+
+center div#feedback img {
+	position: absolute;
+	bottom: 0;
+	right:0;
+	width: 24px;
+	height:24px;
+	cursor: pointer;
 }
