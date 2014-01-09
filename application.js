@@ -51,7 +51,7 @@ function Game(lb, ub) {
 			return;
 		}
 
-		// Set some game state
+		// Set per game state
 		previousGuess = guess;      // save away the previous guess
 		guess = guessNum;           // save away the new guess
 		numGuesses++;               // keep track of the number of guesses we have
