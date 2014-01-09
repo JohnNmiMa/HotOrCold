@@ -10,6 +10,7 @@ function Game(lb, ub) {
 	var guessesStr = "";
 	var catagories = {};
 	var found = false;
+	var guessIndex = "VERY_COLD";
 
 	this.found = function() {
 		return found;
@@ -24,7 +25,7 @@ function Game(lb, ub) {
 		// There are seven catagories of possible answers, depending
 		// upon how far the answer is from the real value.
 //0*********1********2*********3*********4*********5*********6*********7*********8*********9
-//    |     |    |             |                   |                    
+//    |     |    |             |                   |                                       |
 // VH    H    VW         W               C                            VC
        var spread = (upperBounds+1) - lowerBounds;
        catagories.FOUND =     {dist:0,           color:'#00ff00', ans:'FOUND'};
@@ -33,7 +34,7 @@ function Game(lb, ub) {
        catagories.VERY_WARM = {dist:spread*0.15, color:'#ff6f00', ans:'VERY WARM'};
        catagories.WARM =      {dist:spread*0.3,  color:'#ff9c00', ans:'WARM'};
        catagories.COLD =      {dist:spread*0.5,  color:'#4387fd', ans:'COLD'};
-       catagories.VERY_COLD = {dist:spread*0.75,  color:'#0000ff', ans:'VERY COLD'};
+       catagories.VERY_COLD = {dist:spread,      color:'#0000ff', ans:'VERY COLD'};
 	}
 
 	// Validate the guess: Is it empty? Is it a number? Is it within the game bounds
@@ -49,42 +50,32 @@ function Game(lb, ub) {
 			alert("Please enter a number between " + lowerBounds + " and " + upperBounds);
 			return;
 		}
-		previousGuess = guess;
-		guess = guessNum;
-		numGuesses++;
-		if (guessesStr.length != 0)
-			guessesStr+=" ";
+
+		// Set some game state
+		previousGuess = guess;      // save away the previous guess
+		guess = guessNum;           // save away the new guess
+		numGuesses++;               // keep track of the number of guesses we have
+		if (guessesStr.length != 0) // update the list of guesses
+			guessesStr+=" ";   
 		guessesStr += guessStr;
+		guessIndex = computeCatagoryIndex(); // determine if this is a hot or cold guess
 		return true;
 	}
 
 	// Figure out what band of warmth or coldness the current guess lies
-	var getCatagoryIndex = function() {
+	var computeCatagoryIndex = function() {
 		var diff = hiddenNumber - guess;
 		if (diff < 0) diff = -diff;
 
-		if (diff == catagories['FOUND']['dist']) {
-			ans = 'FOUND';
-		} else if (diff <= catagories['VERY_HOT']['dist']) {
-			ans = 'VERY_HOT';	
-		} else if (diff <= catagories['HOT']['dist']) {
-			ans = 'HOT';
-		} else if (diff <= catagories['VERY_WARM']['dist']) {
-			ans = 'VERY_WARM';
-		} else if (diff <= catagories['WARM']['dist']) {
-			ans = 'WARM';
-		} else if (diff <= catagories['COLD']['dist']) {
-			ans = 'COLD';
-		} else {
-			ans = 'VERY_COLD';
+		for (var index in catagories) {
+			if (diff <= catagories[index]['dist'])
+				return index;
 		}
-		return ans;
 	}
 
 	// Figure out if the current guess is warmer or colder than the previous guess
 	this.computeWarmer = function(previousAnswer) {
-		var index = getCatagoryIndex();
-		var ans = catagories[index]['ans'];
+		var ans = catagories[guessIndex]['ans'];
 
 		var diff = hiddenNumber - guess;
 		diff = (diff < 0) ? -diff : diff;
@@ -107,17 +98,15 @@ function Game(lb, ub) {
 	// Returns an answer string depending upon the distance
 	// the guess is from the hiddenNumber
 	this.computeAnswer = function() {
-		var index = getCatagoryIndex();
-		if (index == 'FOUND')
+		if (guessIndex == 'FOUND')
 			found = true;
-		return catagories[index]['ans'];
+		return catagories[guessIndex]['ans'];
 	}
 
 	// Returns a color value depending upon the distance the
 	// guess is from the hiddenNumber
 	this.computeAnsColor = function() {
-		var index = getCatagoryIndex();
-		return catagories[index]['color'];
+		return catagories[guessIndex]['color'];
 	}
 
 	this.getGuessesStr = function() {
