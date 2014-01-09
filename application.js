@@ -12,6 +12,19 @@ function Game(lb, ub) {
 	var found = false;
 	var guessIndex = "VERY_COLD";
 
+	// The getters
+	this.answer = function() {
+		return catagories[guessIndex]['ans'];
+	}
+	this.answerColor = function() {
+		return catagories[guessIndex]['color'];
+	}
+	this.guessesStr = function() {
+		return guessesStr;
+	}
+	this.numGuesses = function() {
+		return numGuesses;
+	}
 	this.found = function() {
 		return found;
 	}
@@ -21,12 +34,13 @@ function Game(lb, ub) {
 		hiddenNumber = Math.floor(Math.random() * 100) + 1;		
 	}
 
-	var computeAnswerCatagories = function() {
-		// There are seven catagories of possible answers, depending
-		// upon how far the answer is from the real value.
+	// There are seven catagories of possible answers, depending
+	// upon how far the answer is from the real value.
 //0*********1********2*********3*********4*********5*********6*********7*********8*********9
 //    |     |    |             |                   |                                       |
 // VH    H    VW         W               C                            VC
+	var computeAnswerCatagories = function() {
+
        var spread = (upperBounds+1) - lowerBounds;
        catagories.FOUND =     {dist:0,           color:'#00ff00', ans:'FOUND'};
        catagories.VERY_HOT =  {dist:5,           color:'#ff0000', ans:'VERY HOT'};
@@ -37,7 +51,19 @@ function Game(lb, ub) {
        catagories.VERY_COLD = {dist:spread,      color:'#0000ff', ans:'VERY COLD'};
 	}
 
+	// Figure out what band of warmth or coldness the current guess lies
+	var computeCatagoryIndex = function() {
+		var diff = hiddenNumber - guess;
+		if (diff < 0) diff = -diff;
+
+		for (var index in catagories) {
+			if (diff <= catagories[index]['dist'])
+				return index;
+		}
+	}
+
 	// Validate the guess: Is it empty? Is it a number? Is it within the game bounds
+	// And after we validate, let's update some game state
 	this.validateGuess = function(guessStr) {
 		//console.log("guess = " + guessStr + " , a " + typeof(guessStr));
 		if(guessStr === "") return; // Don't want empty guesses
@@ -59,18 +85,9 @@ function Game(lb, ub) {
 			guessesStr+=" ";   
 		guessesStr += guessStr;
 		guessIndex = computeCatagoryIndex(); // determine if this is a hot or cold guess
+		if (guessIndex == 'FOUND')  // If we found the answer, save that away
+			found = true;
 		return true;
-	}
-
-	// Figure out what band of warmth or coldness the current guess lies
-	var computeCatagoryIndex = function() {
-		var diff = hiddenNumber - guess;
-		if (diff < 0) diff = -diff;
-
-		for (var index in catagories) {
-			if (diff <= catagories[index]['dist'])
-				return index;
-		}
 	}
 
 	// Figure out if the current guess is warmer or colder than the previous guess
@@ -82,7 +99,7 @@ function Game(lb, ub) {
 		var prevDiff = hiddenNumber - previousGuess;
 		prevDiff = (prevDiff < 0) ? -prevDiff : prevDiff;
 
-		if (previousAnswer.length != 0) {
+		if (numGuesses != 0) {
 			if (previousAnswer === ans) {
 				if (prevDiff > diff)
 					return 'warmer';
@@ -93,28 +110,6 @@ function Game(lb, ub) {
 			}
 		}
 		return '';
-	}
-
-	// Returns an answer string depending upon the distance
-	// the guess is from the hiddenNumber
-	this.computeAnswer = function() {
-		if (guessIndex == 'FOUND')
-			found = true;
-		return catagories[guessIndex]['ans'];
-	}
-
-	// Returns a color value depending upon the distance the
-	// guess is from the hiddenNumber
-	this.computeAnsColor = function() {
-		return catagories[guessIndex]['color'];
-	}
-
-	this.getGuessesStr = function() {
-		return guessesStr;
-	}
-
-	this.getNumGuesses = function() {
-		return numGuesses;
 	}
 
 	// Init code here
@@ -150,12 +145,12 @@ $(document).ready(function() {
 				if (!game.validateGuess($(this).val()))
 					throw "Not valid guess";
 
-				$('center ul li.num_guesses').html("(" + game.getNumGuesses() + ")");
-				$('center ul li.ans_number').html(game.getGuessesStr());
+				$('center ul li.num_guesses').html("(" + game.numGuesses() + ")");
+				$('center ul li.ans_number').html(game.guessesStr());
 
-				$('center p#answer').css('color', game.computeAnsColor());
+				$('center p#answer').css('color', game.answerColor());
 				var previousAnswer = $('center p#answer').html();
-				$('center p#answer').html(game.computeAnswer());
+				$('center p#answer').html(game.answer());
 
 				$('center p#warmer').html(game.computeWarmer(previousAnswer));
 			} catch(e) {
