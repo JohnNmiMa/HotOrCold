@@ -145,10 +145,13 @@ $(document).ready(function() {
 	// * get the color value of the answer text
 	// * write the answer text into the DOM using the computed color
 	// * clear out the input field
-	// NOTE: Don't ever return from an event handler. Calling return is like doing the
-	//       following two things:
+	// NOTE: Don't ever call 'return' from an event handler. Calling return is
+	//       automatically does the following two things:
 	//       1) event.preventDefault();
 	//       2) event.stopPropegation();
+	//       As done below, we only cancel the default bahavior for the 'return' or
+	//       'enter' key. But we should never prevent event propogation of cancel 
+	//       default behavior for the other events we aren't intered in.
 	$("input#guess").keypress(function(event) {
 		if (event.which == 13) { // Don't mess with event propegation or default action
 			                     // for any key except the 'return' key
@@ -172,7 +175,7 @@ $(document).ready(function() {
 				// Clear the input form
 				$(this).val("");
 
-				// Don't cancel default behavior for the 'return' that we already handled
+				// Cancel default behavior for the 'return' that we already handled
 				event.preventDefault();
 			}
 		}
