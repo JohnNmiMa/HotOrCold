@@ -9,6 +9,11 @@ function Game(lb, ub) {
 	var numGuesses = 0;
 	var guessesStr = "";
 	var catagories = {};
+	var found = false;
+
+	this.found = function() {
+		return found;
+	}
 
 	// Compute a random integer between upper and lower bounds
 	var computeHiddenNumber = function() {
@@ -103,6 +108,8 @@ function Game(lb, ub) {
 	// the guess is from the hiddenNumber
 	this.computeAnswer = function() {
 		var index = getCatagoryIndex();
+		if (index == 'FOUND')
+			found = true;
 		return catagories[index]['ans'];
 	}
 
@@ -138,27 +145,36 @@ $(document).ready(function() {
 	// * get the color value of the answer text
 	// * write the answer text into the DOM using the computed color
 	// * clear out the input field
+	// NOTE: Don't ever return from an event handler. Calling return is like doing the
+	//       following two things:
+	//       1) event.preventDefault();
+	//       2) event.stopPropegation();
 	$("#guess").keypress(function(event) {
-		if (event.which != 13) return;
-		try {
-			if (!game.validateGuess($(this).val())) {
-				throw "Not valid guess";
+		if (event.which == 13) { // Don't mess with event propegation or default action
+			                     // for any key except the 'return' key
+			try {
+				if (game.found())
+					throw "Quit Playing";
+				if (!game.validateGuess($(this).val()))
+					throw "Not valid guess";
+
+				$('center ul li.num_guesses').html("(" + game.getNumGuesses() + ")");
+				$('center ul li.ans_number').html(game.getGuessesStr());
+
+				$('center p#answer').css('color', game.computeAnsColor());
+				var previousAnswer = $('center p#answer').html();
+				$('center p#answer').html(game.computeAnswer());
+
+				$('center p#warmer').html(game.computeWarmer(previousAnswer));
+			} catch(e) {
+				//console.log(e);
+			} finally {
+				// Clear the input form
+				$(this).val("");
+
+				// Don't cancel default behavior for the 'return' that we already handled
+				event.preventDefault();
 			}
-
-			$('center ul li.num_guesses').html("(" + game.getNumGuesses() + ")");
-			$('center ul li.ans_number').html(game.getGuessesStr());
-
-			$('center p#answer').css('color', game.computeAnsColor());
-			var previousAnswer = $('center p#answer').html();
-			$('center p#answer').html(game.computeAnswer());
-
-			$('center p#warmer').html(game.computeWarmer(previousAnswer));
-		} catch(e) {
-			//console.log(e);
-		} finally {
-			event.preventDefault();
-			event.stopPropagation();
-			$(this).val(""); // Clear the input form
 		}
 	});
 
