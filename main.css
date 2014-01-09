@@ -124,7 +124,7 @@ center div#feedback {
 	min-height: 75px;
 }
 
- center div#feedback #answer {
+center div#feedback #answer {
 	font-family: "Crimson-Semibold", "Times New Roman", Georgia, serif;
 	font-size: 48px;
 	min-height: 40px;
@@ -133,7 +133,6 @@ center div#feedback {
 
 center div#feedback #warmer {
 	font-size:14px;
-	/*margin-bottom: 20px;*/
 	min-height: 20px;
 }
 
