@@ -33,7 +33,7 @@ function Game(lb, ub) {
        catagories.VERY_WARM = {dist:spread*0.15, color:'#ff6f00', ans:'VERY WARM'};
        catagories.WARM =      {dist:spread*0.3,  color:'#ff9c00', ans:'WARM'};
        catagories.COLD =      {dist:spread*0.5,  color:'#4387fd', ans:'COLD'};
-       catagories.VERY_COLD = {dist:spread*0.5,  color:'#0000ff', ans:'VERY COLD'};
+       catagories.VERY_COLD = {dist:spread*0.75,  color:'#0000ff', ans:'VERY COLD'};
 	}
 
 	// Validate the guess: Is it empty? Is it a number? Is it within the game bounds
@@ -149,7 +149,7 @@ $(document).ready(function() {
 	//       following two things:
 	//       1) event.preventDefault();
 	//       2) event.stopPropegation();
-	$("#guess").keypress(function(event) {
+	$("input#guess").keypress(function(event) {
 		if (event.which == 13) { // Don't mess with event propegation or default action
 			                     // for any key except the 'return' key
 			try {
