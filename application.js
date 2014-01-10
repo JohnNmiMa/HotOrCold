@@ -13,16 +13,16 @@ function Game(lb, ub) {
 	var guessIndex = "VERY_COLD";
 
 	// The getters
-	this.answer = function() {
+	this.getAnswer = function() {
 		return catagories[guessIndex]['ans'];
 	}
-	this.answerColor = function() {
+	this.getAnswerColor = function() {
 		return catagories[guessIndex]['color'];
 	}
-	this.guessesStr = function() {
+	this.getGuessesStr = function() {
 		return guessesStr;
 	}
-	this.numGuesses = function() {
+	this.getNumGuesses = function() {
 		return numGuesses;
 	}
 	this.found = function() {
@@ -145,12 +145,12 @@ $(document).ready(function() {
 				if (!game.validateGuess($(this).val()))
 					throw "Not valid guess";
 
-				$('center ul li.num_guesses').html("(" + game.numGuesses() + ")");
-				$('center ul li.ans_number').html(game.guessesStr());
+				$('center ul li.num_guesses').html("(" + game.getNumGuesses() + ")");
+				$('center ul li.ans_number').html(game.getGuessesStr());
 
-				$('center p#answer').css('color', game.answerColor());
+				$('center p#answer').css('color', game.getAnswerColor());
 				var previousAnswer = $('center p#answer').html();
-				$('center p#answer').html(game.answer());
+				$('center p#answer').html(game.getAnswer());
 
 				$('center p#warmer').html(game.computeWarmer(previousAnswer));
 			} catch(e) {
