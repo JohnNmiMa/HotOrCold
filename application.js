@@ -141,9 +141,9 @@ $(document).ready(function() {
 			                     // for any key except the 'return' key
 			try {
 				if (game.found())
-					throw "Quit Playing";
+					throw {name:"Note", message:"Quit Playing"}; // Custom message
 				if (!game.validateGuess($(this).val()))
-					throw "Not valid guess";
+					throw new Error("Not valid guess");          // Use Error object
 
 				$('center ul li.num_guesses').html("(" + game.getNumGuesses() + ")");
 				$('center ul li.ans_number').html(game.getGuessesStr());
@@ -154,7 +154,7 @@ $(document).ready(function() {
 
 				$('center p#warmer').html(game.computeWarmer(previousAnswer));
 			} catch(e) {
-				//console.log(e);
+				//console.log(e.name + ": " + e.message);
 			} finally {
 				// Clear the input form
 				$(this).val("");
