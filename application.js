@@ -69,12 +69,12 @@ function Game(lb, ub) {
 		if(guessStr === "") return; // Don't want empty guesses
 		if (!$.isNumeric(guessStr)) { // Only want real numbers - thank you jQuery!
 			alert("Please enter a number!");
-			return;
+			return false;
 		}
 		var guessNum = parseInt(guessStr);
 		if (guessNum < lowerBounds || guessNum > upperBounds) { // Guess inside of the limits
 			alert("Please enter a number between " + lowerBounds + " and " + upperBounds);
-			return;
+			return false;
 		}
 
 		// Set per guess state
